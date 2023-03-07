@@ -1,4 +1,5 @@
 #include "../include/Enemy.hpp"
+#include "../include/Time.hpp"
 #include <iostream>
 
 Enemy::Enemy() {
@@ -12,8 +13,18 @@ Enemy::Enemy() {
 }
 
 void Enemy::move() {
-    y = enemySprite.getPosition().y + rand() % 2;
-    x = enemySprite.getPosition().x + rand() % 2;
+    if(enemySprite.getPosition().y > 1080 - enemySprite.getRadius() || enemySprite.getPosition().y < 0) {
+        randY = randY * -1;
+    }else if(enemySprite.getPosition().x > 1920 - 10.0f || enemySprite.getPosition().x < 0) {
+        randX = randX * -1;
+    }
 
-    enemySprite.setPosition(x, y);
+    if(1 == rand() % 1000) {
+        randX = ((float)rand() / RAND_MAX) * 2 - 1;
+        randY = ((float)rand() / RAND_MAX) * 2 - 1;
+        std::cout << "change direction" << std::endl;
+    }
+    x = x + randX;
+    y = y + randY;
+    enemySprite.setPosition(x + randX, y + randY);
 }
