@@ -9,6 +9,7 @@ class Enemy {
         Enemy();
         void move();
         sf::CircleShape enemySprite;
+        sf::Vector2i getPosition();
 
     private:
         sf::Texture texture;

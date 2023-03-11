@@ -22,9 +22,12 @@ void Enemy::move() {
     if(1 == rand() % 1000) {
         randX = ((float)rand() / RAND_MAX) * 2 - 1;
         randY = ((float)rand() / RAND_MAX) * 2 - 1;
-        std::cout << "change direction" << std::endl;
     }
     x = x + randX;
     y = y + randY;
     enemySprite.setPosition(x + randX, y + randY);
+}
+
+sf::Vector2i Enemy::getPosition() {
+    return sf::Vector2i(x, y);
 }

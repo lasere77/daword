@@ -1,9 +1,11 @@
 #include "../include/Libs.hpp"
 #include "../include/Population.hpp"
 #include "../include/Enemy.hpp"
+#include "../include/PowerUp.hpp"
 
 const int NBINDIVIDUAL = 15;
 const int NBENEMY = 15;
+const int NBPOWERUP = 5;
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(200, 200), "daword", sf::Style::Fullscreen);
@@ -11,11 +13,11 @@ int main() {
     srand(time(nullptr));
     Individual individuals[NBINDIVIDUAL]; 
     Enemy enemys[NBENEMY];
-    
-    //individuals
-    for(int i = 0; i != NBINDIVIDUAL; i++) {
-        individuals[i].individualSprite.setPosition(individuals[i].individualSprite.getPosition().x, individuals[i].individualSprite.getPosition().y + (15 * i));
-    }
+    PowerUp powerUps[NBPOWERUP];
+
+
+    std::vector<sf::Vector2i> enemysPosition;
+    std::vector<sf::Vector2i> powerUpPosition;
     for(int i = 0; i != NBENEMY; i++) {
         enemys[i].enemySprite.setPosition(960, 540);
     }
@@ -29,15 +31,34 @@ int main() {
                 window.close();
             }
         }
+
+        //powerUps
+        for(int i = 0; i != NBPOWERUP; i++) {
+            powerUpPosition.push_back(powerUps[i].getPosition());
+        }
+        //enemys
         for(int i = 0; i != NBENEMY; i++) {
             enemys[i].move();
+            enemys[i].enemySprite.getPosition();
+            enemysPosition.push_back(enemys[i].getPosition());
         }
+        //individuals
+        for(int i = 0; i != NBINDIVIDUAL; i++) {
+            individuals[i].move(enemysPosition);
+        }
+        enemysPosition.clear();
+        powerUpPosition.clear();
+
         window.clear();
         for(int i = 0; i != NBINDIVIDUAL; i++) {
             window.draw(individuals[i].individualSprite);
+            window.draw(individuals[i].getText());
         }
         for(int i = 0; i != NBENEMY; i++) {
             window.draw(enemys[i].enemySprite);
+        }
+        for(int i = 0; i != NBPOWERUP; i++) {
+            window.draw(powerUps[i].powerUpSprite);
         }
         window.display();
     }
