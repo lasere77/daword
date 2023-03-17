@@ -18,7 +18,20 @@ void Enemy::move() {
     }else if(enemySprite.getPosition().x > 1920 - 10.0f || enemySprite.getPosition().x < 0) {
         randX = randX * -1;
     }
-
+    /*
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        y--;
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        y++;
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        x++;
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        x--;
+    }
+    */
     if(1 == rand() % 1000) {
         randX = ((float)rand() / RAND_MAX) * 2 - 1;
         randY = ((float)rand() / RAND_MAX) * 2 - 1;

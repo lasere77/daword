@@ -6,7 +6,9 @@ class Individual {
     public:
         Individual();
         sf::CircleShape individualSprite;
-        void move(std::vector<sf::Vector2i> enemyPosition);
+        void move();
+        void damage(std::vector<sf::Vector2i> enemyPosition);
+        void bonusLife(std::vector<sf::Vector2i> powerUpPosition);
         sf::Text getText();
 
     private:
@@ -16,9 +18,11 @@ class Individual {
         float speed = 4.0f;
         int health = 3;
         int fit = 0;
-        bool basic;
-        bool fearful;
-        bool deviant;
+        bool basic = false;
+        bool fearful = false;
+        bool deviant = false;
+        bool sufferDamage = false;
+        int delaySufferDamage;
         float x;
         float y;
         float randX = ((float)rand() / RAND_MAX) * 2 - 1;

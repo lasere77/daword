@@ -2,10 +2,13 @@
 #include "../include/Population.hpp"
 #include "../include/Enemy.hpp"
 #include "../include/PowerUp.hpp"
+#include "../include/Time.hpp"
+#include <thread>
 
 const int NBINDIVIDUAL = 15;
 const int NBENEMY = 15;
 const int NBPOWERUP = 5;
+
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(200, 200), "daword", sf::Style::Fullscreen);
@@ -14,6 +17,8 @@ int main() {
     Individual individuals[NBINDIVIDUAL]; 
     Enemy enemys[NBENEMY];
     PowerUp powerUps[NBPOWERUP];
+
+    std::thread timerThread(timer);
 
 
     std::vector<sf::Vector2i> enemysPosition;
@@ -44,7 +49,9 @@ int main() {
         }
         //individuals
         for(int i = 0; i != NBINDIVIDUAL; i++) {
-            individuals[i].move(enemysPosition);
+            individuals[i].move();
+            individuals[i].damage(enemysPosition);
+            //individuals[i].bonusLife(powerUpPosition);
         }
         enemysPosition.clear();
         powerUpPosition.clear();
@@ -62,5 +69,7 @@ int main() {
         }
         window.display();
     }
+    killThread();
+    timerThread.join();
     return 0;
 }
