@@ -6,7 +6,7 @@ class Individual {
     public:
         Individual();
         sf::CircleShape individualSprite;
-        void move();
+        void move(std::vector<sf::Vector2i> enemyPosition);
         void damage(std::vector<sf::Vector2i> enemyPosition);
         void bonusLife(std::vector<sf::Vector2i> powerUpPosition);
         sf::Text getText();

@@ -12,7 +12,7 @@ const int NBPOWERUP = 5;
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(200, 200), "daword", sf::Style::Fullscreen);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(90);
     srand(time(nullptr));
     Individual individuals[NBINDIVIDUAL]; 
     Enemy enemys[NBENEMY];
@@ -49,7 +49,7 @@ int main() {
         }
         //individuals
         for(int i = 0; i != NBINDIVIDUAL; i++) {
-            individuals[i].move();
+            individuals[i].move(enemysPosition);
             individuals[i].damage(enemysPosition);
             //individuals[i].bonusLife(powerUpPosition);
         }
