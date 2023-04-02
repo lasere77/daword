@@ -30,20 +30,22 @@ Individual::Individual() {
     }
 }
 
-void Individual::move(std::vector<sf::Vector2i> enemyPosition) {
+void Individual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<sf::Vector2i> powerUpPosition) {
     //colition border
     if((y > 1080 - radius && randY > 0) || (y < 0 && randY < 0)) {
         randY = randY * -1;
     }else if((x > 1920 - radius && randX > 0) || (x < 0 && randX < 0)) {
         randX = randX * -1;
     }
-    if(basic) {//esquive que les enemy et vas sur les powerUps
+
     //changegment aléatoir de direction
     if(1 == rand() % 1000) {
         randX = ((float)rand() / RAND_MAX) * 2 - 1;
         randY = ((float)rand() / RAND_MAX) * 2 - 1;
         std::cout << "basic" << std::endl;
     }
+
+    if(basic) {//esquive que les enemy et vas sur les powerUps
     //part dans la direction auposée si il l'individue est trop près de l'enemy
     for(int i = 0; i != enemyPosition.size(); i++) {
         if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {
@@ -62,8 +64,42 @@ void Individual::move(std::vector<sf::Vector2i> enemyPosition) {
         }
     }
     }else if(fearful) {//esquive tous
-        
+        //part dans la direction auposée si il l'individue est trop près de l'enemy
+        for(int i = 0; i != enemyPosition.size(); i++) {
+            if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {
+                if(x < 1920 - radius && x < 0 && y < 1080  - radius && y < 0) {
+                    if((x < enemyPosition.at(i).x && randX > 0) || (x > enemyPosition.at(i).x && randX < 0)) {
+                        randY = randY * -1;
+                    }
+                }
+            }
+            if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {
+                if(x < 1920 - radius && x > 0 && y < 1080 - radius && y > 0) {
+                    if((y < enemyPosition.at(i).y && randY > 0) || (y > enemyPosition.at(i).y && randY < 0)) {
+                        randY = randY * -1;
+                    }
+                }
+            }
+        }
+        //part dans la direction auposée si il l'individue est trop près du powerUp
+        for(int i = 0; i != powerUpPosition.size(); i++) {
+            if(y >= powerUpPosition.at(i).y - 60 && y <= powerUpPosition.at(i).y + 60 && x >= powerUpPosition.at(i).x - 60 && x <= powerUpPosition.at(i).x + 60) {
+                if(x < 1920 - radius && x < 0 && y < 1080  - radius && y < 0) {
+                    if((x < powerUpPosition.at(i).x && randX > 0) || (x > powerUpPosition.at(i).x && randX < 0)) {
+                        randY = randY * -1;
+                    }
+                }
+            }
+            if(y >= powerUpPosition.at(i).y - 60 && y <= powerUpPosition.at(i).y + 60 && x >= powerUpPosition.at(i).x - 60 && x <= powerUpPosition.at(i).x + 60) {
+                if(x < 1920 - radius && x > 0 && y < 1080 - radius && y > 0) {
+                    if((y < powerUpPosition.at(i).y && randY > 0) || (y > powerUpPosition.at(i).y && randY < 0)) {
+                        randY = randY * -1;
+                    }
+                }
+            }
+        }
     }else if(deviant) {
+        
     }
 
     x = x + randX;

@@ -52,7 +52,7 @@ int main() {
         }
         //individuals
         for(int i = 0; i != NBINDIVIDUAL; i++) {
-            individuals[i].move(enemysPosition);
+            individuals[i].move(enemysPosition, powerUpPosition);
             individuals[i].damage(enemysPosition);
             int usedPowerUp = individuals[i].bonusLife(powerUpPosition);
             if(usedPowerUp >= 0) {
