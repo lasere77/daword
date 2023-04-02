@@ -32,9 +32,9 @@ Individual::Individual() {
 
 void Individual::move(std::vector<sf::Vector2i> enemyPosition) {
     //colition border
-    if(individualSprite.getPosition().y > 1080 - individualSprite.getRadius() || individualSprite.getPosition().y < 0) {
+    if((y > 1080 - radius && randY > 0) || (y < 0 && randY < 0)) {
         randY = randY * -1;
-    }else if(individualSprite.getPosition().x > 1920 - individualSprite.getRadius() || individualSprite.getPosition().x < 0) {
+    }else if((x > 1920 - radius && randX > 0) || (x < 0 && randX < 0)) {
         randX = randX * -1;
     }
     if(basic) {//esquive que les enemy et vas sur les powerUps
@@ -46,21 +46,26 @@ void Individual::move(std::vector<sf::Vector2i> enemyPosition) {
     }
     //part dans la direction auposée si il l'individue est trop près de l'enemy
     for(int i = 0; i != enemyPosition.size(); i++) {
-        if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {  //sa a  modif pour les bordeur et sa bug
-            if((x < enemyPosition.at(i).x && randX > 0) || (x > enemyPosition.at(i).x && randX < 0) /*&& individualSprite.getPosition().x >= 1920 - individualSprite.getRadius() || individualSprite.getPosition().x <= 0 && individualSprite.getPosition().y >= 1080 - individualSprite.getRadius() || individualSprite.getPosition().y <= 0*/) {
-                randX = randX * -1;
+        if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {
+            if(x < 1920 - radius && x < 0 && y < 1080  - radius && y < 0) {
+                if((x < enemyPosition.at(i).x && randX > 0) || (x > enemyPosition.at(i).x && randX < 0)) {
+                    randY = randY * -1;
+                }
             }
         }
-        if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) { //sa a  modif pour les bordeur et sa bug
-            if((y < enemyPosition.at(i).y && randY > 0) || (y > enemyPosition.at(i).y && randY < 0) /*&& individualSprite.getPosition().x >= 1920 - individualSprite.getRadius() || individualSprite.getPosition().x <= 0 && individualSprite.getPosition().y >= 1080 - individualSprite.getRadius() || individualSprite.getPosition().y <= 0*/) {
-                randY = randY * -1;
-            } 
+        if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {
+            if(x < 1920 - radius && x > 0 && y < 1080 - radius && y > 0) {
+                if((y < enemyPosition.at(i).y && randY > 0) || (y > enemyPosition.at(i).y && randY < 0)) {
+                    randY = randY * -1;
+                }
+            }
         }
     }
     }else if(fearful) {//esquive tous
         
     }else if(deviant) {
     }
+
     x = x + randX;
     y = y + randY;
     individualSprite.setPosition(x, y);
@@ -81,13 +86,15 @@ void Individual::damage(std::vector<sf::Vector2i> enemyPosition) {
     }
 }
 
-void Individual::bonusLife(std::vector<sf::Vector2i> powerUpPosition) {
+int Individual::bonusLife(std::vector<sf::Vector2i> powerUpPosition) {
     for(int i = 0; i != powerUpPosition.size(); i++) {
         if(y >= powerUpPosition.at(i).y - 20 && y <= powerUpPosition.at(i).y + 20 && x >= powerUpPosition.at(i).x - 20 && x <= powerUpPosition.at(i).x + 20) {
             health++;
             text.setString(std::to_string(health));
+            return i;
         }
     }
+    return -1;
 }
 
 sf::Text Individual::getText() {

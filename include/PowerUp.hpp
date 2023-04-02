@@ -7,6 +7,7 @@ class PowerUp {
         PowerUp();
         sf::CircleShape powerUpSprite;
         sf::Vector2i getPosition();
+        void generateNewPositon();
 
     private:
         sf::Texture texture;

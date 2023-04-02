@@ -11,6 +11,12 @@ PowerUp::PowerUp() {
     powerUpSprite.setRadius(10.0f);
 }
 
+void PowerUp::generateNewPositon() {
+    x = rand() % 1921;
+    y = rand() % 1081;
+    powerUpSprite.setPosition(sf::Vector2(x, y));
+}
+
 sf::Vector2i PowerUp::getPosition() {
     return sf::Vector2i(x, y);
 }
