@@ -1,6 +1,7 @@
 #include "../include/Population.hpp"
 #include "../include/Time.hpp"
 #include <iostream>
+#include <math.h>
 
 
 sf::Font font;
@@ -63,6 +64,28 @@ void Individual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<sf::V
             }
         }
     }
+    /*
+    //go to the powerUp
+    for(int i = 0; i != powerUpPosition.size(); i++) {
+        if(powerUpPosition.at(i).x > x && randX < 0) {
+            randX = randX * -1;
+        }
+        if(powerUpPosition.at(i).y > y && randY < 0) {
+            randY = randY * -1;
+        }
+        if(powerUpPosition.at(i).x < x && randX > 0) {
+            randX = randX * -1;
+        }
+        if(powerUpPosition.at(i).y < y && randY > 0) {
+            randY = randY * -1;
+        }
+        int AB = x - powerUpPosition.at(i).x;
+        int BC = y - powerUpPosition.at(i).y;
+        int AC = AB * AB + BC * BC;
+        std::cout << sqrt(AC) << std::endl;
+    }
+    */
+
     }else if(fearful) {//esquive tous
         //part dans la direction auposée si il l'individue est trop près de l'enemy
         for(int i = 0; i != enemyPosition.size(); i++) {
@@ -99,7 +122,7 @@ void Individual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<sf::V
             }
         }
     }else if(deviant) {
-        
+
     }
 
     x = x + randX;
@@ -131,6 +154,12 @@ int Individual::bonusLife(std::vector<sf::Vector2i> powerUpPosition) {
         }
     }
     return -1;
+}
+
+void Individual::setFitPoint() {
+    if(health > 0) {
+        fit = getTime();
+    }
 }
 
 sf::Text Individual::getText() {

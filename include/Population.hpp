@@ -8,6 +8,7 @@ class Individual {
         sf::CircleShape individualSprite;
         void move(std::vector<sf::Vector2i> enemyPosition, std::vector<sf::Vector2i> powerUpPosition);
         void damage(std::vector<sf::Vector2i> enemyPosition);
+        void setFitPoint(); 
         int bonusLife(std::vector<sf::Vector2i> powerUpPosition);
         sf::Text getText();
 
@@ -22,6 +23,7 @@ class Individual {
         bool fearful = false;
         bool deviant = false;
         bool sufferDamage = false;
+        int nearestPowerUps;
         int delaySufferDamage;
         float x = 500;
         float y = 200;

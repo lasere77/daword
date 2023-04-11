@@ -10,6 +10,14 @@ const int NBINDIVIDUAL = 15;
 const int NBENEMY = 15;
 const int NBPOWERUP = 5;
 
+/*
+*things to review/modify {
+*   speed for individuals, 
+*   the direction of the basic individual when he goes on a powerUp,
+*   reponsive
+*}
+*/
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(200, 200), "daword", sf::Style::Fullscreen);
     window.setFramerateLimit(90);
@@ -19,7 +27,6 @@ int main() {
     PowerUp powerUps[NBPOWERUP];
 
     std::thread timerThread(timer);
-
 
     std::vector<sf::Vector2i> enemysPosition;
     std::vector<sf::Vector2i> powerUpPosition;
@@ -54,6 +61,7 @@ int main() {
         for(int i = 0; i != NBINDIVIDUAL; i++) {
             individuals[i].move(enemysPosition, powerUpPosition);
             individuals[i].damage(enemysPosition);
+            individuals[i].setFitPoint();
             int usedPowerUp = individuals[i].bonusLife(powerUpPosition);
             if(usedPowerUp >= 0) {
                 powerUps[usedPowerUp].generateNewPositon();
