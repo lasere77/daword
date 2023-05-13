@@ -18,6 +18,21 @@ made by lasere77
 **the sources are compiled :**
 with mingw64 (g++), you can use the Makefile
 
+## install
+if you are using Windows you need to copy the dlls with the binary:
+all ddl in libs\SFML-2.5.1\bin to \bin
+you can use makeFile with:
+
+    make copyDll
+    
+if you are using Linux, you need to install the libsfml-dev package:
+
+    sudo apt install libsfml-dev
+
+or if you have pacman:
+
+    sudo pacman -S libsfml-dev
+
 ---
 
 ## test 
