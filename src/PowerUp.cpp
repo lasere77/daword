@@ -2,7 +2,7 @@
 #include <iostream>
 
 PowerUp::PowerUp() {
-    std::cout << "a individual has been generated." << std::endl;
+    std::cout << "a PowerUp has been generated." << std::endl;
     if(!texture.loadFromFile("assets/PowerUp/Texture/PowerUp.png")) {
         std::cout << "error from load Texture..." << std::endl;
     }
