@@ -16,8 +16,8 @@ class Individual {
     protected:
         sf::Text text;
         float radius = 10.0f;
-        float x = 500;
-        float y = 200;
+        float x = rand() % 1920;
+        float y = rand() % 1080;
         float randX = ((float)rand() / RAND_MAX) * 2 - 1;
         float randY = ((float)rand() / RAND_MAX) * 2 - 1;
 

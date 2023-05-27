@@ -10,6 +10,7 @@
 #include <thread>
 #include <vector>
 #include <array>
+#include <memory>
 
 const int NBINDIVIDUAL = 15;
 const int NBENEMY = 15;
@@ -27,15 +28,15 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(200, 200), "daword", sf::Style::Fullscreen);
     window.setFramerateLimit(90);
     srand(time(nullptr));
-    std::array<Individual*, NBINDIVIDUAL> individuals;
-    std::generate(individuals.begin(), individuals.end(), []() -> Individual* {
+    std::array<std::unique_ptr<Individual>, NBINDIVIDUAL> individuals;
+    std::generate(individuals.begin(), individuals.end(), []() -> std::unique_ptr<Individual> {
         switch(rand() % 3) {
             case 0:
-                return new BasicIndividual();
+                return std::make_unique<BasicIndividual>();
             case 1:
-                return new FearfulIndividual();
+                return std::make_unique<FearfulIndividual>();
             case 2: 
-                return new DeviantIndividual();
+                return std::make_unique<DeviantIndividual>();
             default: 
                 std::cout << "it didn't make sense this past like that..." << std::endl;
                 exit(1);
@@ -70,7 +71,6 @@ int main() {
             enemysPosition.push_back(enemys[i].getPosition());
         }
         //individuals
-
         for(int i = 0; i != NBINDIVIDUAL; i++) {
             individuals[i]->borderColotion();
             individuals[i]->move(enemysPosition, powerUpPosition);

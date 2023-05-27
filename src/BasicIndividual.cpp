@@ -1,5 +1,6 @@
 #include "../include/BasicIndividual.hpp"
 #include <iostream>
+#include <math.h>
 
 BasicIndividual::BasicIndividual() {
     std::cout << "a Basicindividual has been generated." << std::endl;
@@ -14,41 +15,52 @@ void BasicIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<
     }
 
 
-    for(int i = 0; i != enemyPosition.size(); i++) {
-        if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {
-            if(x < 1920 - radius && x < 0 && y < 1080  - radius && y < 0) {
-                if((x < enemyPosition.at(i).x && randX > 0) || (x > enemyPosition.at(i).x && randX < 0)) {
-                    randY = randY * -1;
-                }
-            }
+    //chand d'action pour allé sur les powerUp
+        //go to the powerUp
+    sf::Vector2i closestPowerUp;
+    float closestDistance = std::numeric_limits<float>::max();
+    float distancePowerUp;
+    // find the most power-up proche
+    for (const auto& powerUp : powerUpPosition) {
+        distancePowerUp = std::sqrt(std::pow(powerUp.x - x, 2) + std::pow(powerUp.y - y, 2));
+        if (distancePowerUp <= distanceCanSeePowerUp) {
+            closestPowerUp = powerUp;
+            closestDistance = distancePowerUp;
+            break;
         }
-        if(y >= enemyPosition.at(i).y - 60 && y <= enemyPosition.at(i).y + 60 && x >= enemyPosition.at(i).x - 60 && x <= enemyPosition.at(i).x + 60) {
+    }
+    
+
+
+    if(distancePowerUp <= distanceCanSeePowerUp) {
+        // Calculer la direction vers le power-up le plus proche
+        randX = closestPowerUp.x - x;
+        randY = closestPowerUp.y - y;
+        float magnitude = std::sqrt(std::pow(randX, 2) + std::pow(randY, 2));// Normaliser la direction
+        
+        if (magnitude != 0) {
+            randX /= magnitude;
+            randY /= magnitude;
+        }
+    }
+
+    //escape to enemy
+    for(int i = 0; i != enemyPosition.size(); i++) {
+        if(y >= enemyPosition.at(i).y - distanceCanSeeEnemy && y <= enemyPosition.at(i).y + distanceCanSeeEnemy && x >= enemyPosition.at(i).x - distanceCanSeeEnemy && x <= enemyPosition.at(i).x + distanceCanSeeEnemy) {
             if(x < 1920 - radius && x > 0 && y < 1080 - radius && y > 0) {
+                if((x < enemyPosition.at(i).x && randX > 0) || (x > enemyPosition.at(i).x && randX < 0)) {
+                    randX = randX * -1;
+                }
                 if((y < enemyPosition.at(i).y && randY > 0) || (y > enemyPosition.at(i).y && randY < 0)) {
                     randY = randY * -1;
                 }
             }
         }
     }
-    //go to the powerUp
-    for(int i = 0; i != powerUpPosition.size(); i++) {
-        if(powerUpPosition.at(i).x > x && randX < 0) {
-            randX = randX * -1;
-        }
-        if(powerUpPosition.at(i).y > y && randY < 0) {
-            randY = randY * -1;
-        }
-        if(powerUpPosition.at(i).x < x && randX > 0) {
-            randX = randX * -1;
-        }
-        if(powerUpPosition.at(i).y < y && randY > 0) {
-            randY = randY * -1;
-        }
-    }
 
 
-    x = x + randX;
-    y = y + randY;
+    x += randX;
+    y += randY;
     individualSprite.setPosition(x, y);
     text.setPosition(sf::Vector2(x + 5, y + 15));
 }
