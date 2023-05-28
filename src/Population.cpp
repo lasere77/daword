@@ -7,7 +7,6 @@
 sf::Font font;
 
 Individual::Individual() {
-    std::cout << "a individual has been generated." << std::endl;
     if(!texture.loadFromFile("assets/Individual/Texture/Individual.jpg")) {
         std::cout << "error from load Texture..." << std::endl;
     }
@@ -55,6 +54,13 @@ int Individual::bonusLife(std::vector<sf::Vector2i> powerUpPosition) {
         }
     }
     return -1;
+}
+
+void Individual::checkHealth() {
+    if(health <= 0) {
+        isAlive = false;
+        std::cout << "he is dead" << std::endl;
+    }
 }
 
 void Individual::setFitPoint() {

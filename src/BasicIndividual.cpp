@@ -15,12 +15,11 @@ void BasicIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<
     }
 
 
-    //chand d'action pour allé sur les powerUp
-        //go to the powerUp
+    //go to the powerUp
     sf::Vector2i closestPowerUp;
     float closestDistance = std::numeric_limits<float>::max();
     float distancePowerUp;
-    // find the most power-up proche
+    // find the most closest power-up 
     for (const auto& powerUp : powerUpPosition) {
         distancePowerUp = std::sqrt(std::pow(powerUp.x - x, 2) + std::pow(powerUp.y - y, 2));
         if (distancePowerUp <= distanceCanSeePowerUp) {
@@ -30,13 +29,10 @@ void BasicIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<
         }
     }
     
-
-
     if(distancePowerUp <= distanceCanSeePowerUp) {
-        // Calculer la direction vers le power-up le plus proche
         randX = closestPowerUp.x - x;
         randY = closestPowerUp.y - y;
-        float magnitude = std::sqrt(std::pow(randX, 2) + std::pow(randY, 2));// Normaliser la direction
+        float magnitude = std::sqrt(std::pow(randX, 2) + std::pow(randY, 2));
         
         if (magnitude != 0) {
             randX /= magnitude;

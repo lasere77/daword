@@ -11,7 +11,9 @@ class Individual {
         void damage(std::vector<sf::Vector2i> enemyPosition);
         void setFitPoint(); 
         int bonusLife(std::vector<sf::Vector2i> powerUpPosition);
+        void checkHealth();
         sf::Text getText();
+        bool isAlive = true;
         
     protected:
         sf::Text text;

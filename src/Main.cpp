@@ -1,20 +1,13 @@
 #include "../include/Libs.hpp"
-#include "../include/Population.hpp"
+#include "../include/Entity.hpp"
 #include "../include/BasicIndividual.hpp"
 #include "../include/FearfulIndividual.hpp"
 #include "../include/Deviantindividual.hpp"
-#include "../include/Enemy.hpp"
-#include "../include/PowerUp.hpp"
 #include "../include/Time.hpp"
-#include <iostream>
-#include <thread>
-#include <vector>
-#include <array>
-#include <memory>
 
-const int NBINDIVIDUAL = 15;
-const int NBENEMY = 15;
-const int NBPOWERUP = 5;
+#include <iostream>
+#include <vector>
+#include <thread>
 
 /*
 *things to review/modify {
@@ -28,8 +21,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(200, 200), "daword", sf::Style::Fullscreen);
     window.setFramerateLimit(90);
     srand(time(nullptr));
-    std::array<std::unique_ptr<Individual>, NBINDIVIDUAL> individuals;
-    std::generate(individuals.begin(), individuals.end(), []() -> std::unique_ptr<Individual> {
+    std::generate(entity::individuals.begin(), entity::individuals.end(), []() -> std::unique_ptr<Individual> {
         switch(rand() % 3) {
             case 0:
                 return std::make_unique<BasicIndividual>();
@@ -37,13 +29,11 @@ int main() {
                 return std::make_unique<FearfulIndividual>();
             case 2: 
                 return std::make_unique<DeviantIndividual>();
-            default: 
+            default:
                 std::cout << "it didn't make sense this past like that..." << std::endl;
                 exit(1);
         }
     });
-    Enemy enemys[NBENEMY];
-    PowerUp powerUps[NBPOWERUP];
 
     std::thread timerThread(timer);
 
@@ -62,23 +52,26 @@ int main() {
 
         //powerUps
         for(int i = 0; i != NBPOWERUP; i++) {
-            powerUpPosition.push_back(powerUps[i].getPosition());
+            powerUpPosition.push_back(entity::powerUps[i].getPosition());
         }
         //enemys
         for(int i = 0; i != NBENEMY; i++) {
-            enemys[i].move();
-            enemys[i].enemySprite.getPosition();
-            enemysPosition.push_back(enemys[i].getPosition());
+            entity::enemys[i].move();
+            entity::enemys[i].enemySprite.getPosition();
+            enemysPosition.push_back(entity::enemys[i].getPosition());
         }
         //individuals
         for(int i = 0; i != NBINDIVIDUAL; i++) {
-            individuals[i]->borderColotion();
-            individuals[i]->move(enemysPosition, powerUpPosition);
-            individuals[i]->damage(enemysPosition);
-            individuals[i]->setFitPoint();
-            int usedPowerUp = individuals[i]->bonusLife(powerUpPosition);
-            if(usedPowerUp >= 0) {
-                powerUps[usedPowerUp].generateNewPositon();
+            if(entity::individuals[i]->isAlive) {
+                entity::individuals[i]->borderColotion();
+                entity::individuals[i]->move(enemysPosition, powerUpPosition);
+                entity::individuals[i]->damage(enemysPosition);
+                entity::individuals[i]->setFitPoint();
+                entity::individuals[i]->checkHealth();
+                int usedPowerUp = entity::individuals[i]->bonusLife(powerUpPosition);
+                if(usedPowerUp >= 0) {
+                    entity::powerUps[usedPowerUp].generateNewPositon();
+                }
             }
         }
         enemysPosition.clear();
@@ -86,14 +79,14 @@ int main() {
 
         window.clear();
         for(int i = 0; i != NBINDIVIDUAL; i++) {
-            window.draw(individuals[i]->individualSprite);
-            window.draw(individuals[i]->getText());
+            window.draw(entity::individuals[i]->individualSprite);
+            window.draw(entity::individuals[i]->getText());
         }
         for(int i = 0; i != NBENEMY; i++) {
-            window.draw(enemys[i].enemySprite);
+            window.draw(entity::enemys[i].enemySprite);
         }
         for(int i = 0; i != NBPOWERUP; i++) {
-            window.draw(powerUps[i].powerUpSprite);
+            window.draw(entity::powerUps[i].powerUpSprite);
         }
         window.display();
     }
