@@ -10,5 +10,5 @@ class BasicIndividual : public Individual {
 
     private:
         const int distanceCanSeeEnemy = 60;
-        const int distanceCanSeePowerUp = 100;
+        const int distanceCanSeePowerUp = 60;
 };

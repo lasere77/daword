@@ -9,11 +9,17 @@
 #include <vector>
 #include <thread>
 
+
+void setTimeur();
+
+unsigned int minute = 0;
+unsigned int oldSeconde = 0;
+unsigned int seconde = 0;
+
+
 /*
 *things to review/modify {
-*   speed for individuals, 
-*   the direction of the basic individual when he goes on a powerUp,
-*   reponsives
+*   speed for individuals, reponsives
 *}
 */
 
@@ -36,6 +42,15 @@ int main() {
     });
 
     std::thread timerThread(timer);
+    sf::Font font;
+
+    if(!font.loadFromFile("assets/font/poppins.ttf")) {
+        std::cerr << "error from load font please check your assets" << std::endl;
+    }
+    sf::Text generalTime;
+    generalTime.setFont(font);
+    generalTime.setPosition(960, 0);
+    generalTime.setCharacterSize(15);
 
     std::vector<sf::Vector2i> enemysPosition;
     std::vector<sf::Vector2i> powerUpPosition;
@@ -72,12 +87,18 @@ int main() {
                 if(usedPowerUp >= 0) {
                     entity::powerUps[usedPowerUp].generateNewPositon();
                 }
+            }else {
+
             }
         }
         enemysPosition.clear();
         powerUpPosition.clear();
 
+        setTimeur();
+        generalTime.setString("[ " + std::to_string(minute) + " ; " + std::to_string(seconde - 60 * minute) + " ]");
+
         window.clear();
+        window.draw(generalTime);
         for(int i = 0; i != NBINDIVIDUAL; i++) {
             window.draw(entity::individuals[i]->individualSprite);
             window.draw(entity::individuals[i]->getText());
@@ -93,4 +114,16 @@ int main() {
     killThread();
     timerThread.join();
     return 0;
+}
+
+
+void setTimeur() {
+    seconde = getTime();
+    if(seconde % 60 == 0 && oldSeconde != seconde && seconde != 0) {
+        oldSeconde = seconde;
+        minute+=1;
+    }
+    std::cout << "old seconde: " << oldSeconde << std::endl;
+    std::cout << "seconde: " << seconde << std::endl;
+    std::cout << "minute: " << minute << std::endl;
 }
