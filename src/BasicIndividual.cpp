@@ -14,29 +14,25 @@ void BasicIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<
         std::cout << "basic" << std::endl;
     }
 
-
-    //go to the powerUp
-    sf::Vector2i closestPowerUp;
-    float closestDistance = std::numeric_limits<float>::max();
-    float distancePowerUp;
-    // find the most closest power-up 
-    for (const auto& powerUp : powerUpPosition) {
-        distancePowerUp = std::sqrt(std::pow(powerUp.x - x, 2) + std::pow(powerUp.y - y, 2));
-        if (distancePowerUp <= distanceCanSeePowerUp) {
-            closestPowerUp = powerUp;
-            closestDistance = distancePowerUp;
-            break;
-        }
-    }
     
-    if(distancePowerUp <= distanceCanSeePowerUp) {
-        randX = closestPowerUp.x - x;
-        randY = closestPowerUp.y - y;
-        float magnitude = std::sqrt(std::pow(randX, 2) + std::pow(randY, 2));
+    //go to the powerUp
+    if(!powerUpPosition.empty() && health < 5) {
+        sf::Vector2i closestPowerUp;
+        float closestDistance = std::numeric_limits<float>::max();
+        float distancePowerUp;
+        // find the most closest power-up 
+        for (const auto& powerUp : powerUpPosition) {
+            distancePowerUp = std::sqrt(std::pow(powerUp.x - x, 2) + std::pow(powerUp.y - y, 2));
+            if (distancePowerUp <= distanceCanSeePowerUp) {
+                closestPowerUp = powerUp;
+                closestDistance = distancePowerUp;
+                break;
+            }
+        }
         
-        if (magnitude != 0) {
-            randX /= magnitude;
-            randY /= magnitude;
+        if(distancePowerUp <= distanceCanSeePowerUp) {
+            randX = closestPowerUp.x - x;
+            randY = closestPowerUp.y - y;
         }
     }
 
@@ -54,6 +50,12 @@ void BasicIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<
         }
     }
 
+
+    float magnetude = std::sqrt(std::pow(randX, 2) + std::pow(randY, 2));
+    if(magnetude != 0) {
+        randX/=magnetude;
+        randY/=magnetude;
+    }
 
     x += randX;
     y += randY;

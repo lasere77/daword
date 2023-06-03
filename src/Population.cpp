@@ -35,8 +35,8 @@ void Individual::damage(std::vector<sf::Vector2i> enemyPosition) {
     if(delaySufferDamage + 3 < getTime()) {
         sufferDamage = false;
     }
-    for(int i = 0; i != enemyPosition.size(); i++) {
-        if(y >= enemyPosition.at(i).y - 20 && y <= enemyPosition.at(i).y + 20 && x >= enemyPosition.at(i).x - 20 && x <= enemyPosition.at(i).x + 20 && !sufferDamage) {
+    for(int i = 0; i != enemyPosition.size(); i++) { 
+        if(y >= enemyPosition.at(i).y - radius * 2 && y <= enemyPosition.at(i).y + radius && x >= enemyPosition.at(i).x - radius * 2 && x <= enemyPosition.at(i).x + radius && !sufferDamage) {
             sufferDamage = true;
             delaySufferDamage = getTime();
             health--;
@@ -46,8 +46,8 @@ void Individual::damage(std::vector<sf::Vector2i> enemyPosition) {
 }
 
 int Individual::bonusLife(std::vector<sf::Vector2i> powerUpPosition) {
-    for(int i = 0; i != powerUpPosition.size(); i++) {
-        if(y >= powerUpPosition.at(i).y - 20 && y <= powerUpPosition.at(i).y + 20 && x >= powerUpPosition.at(i).x - 20 && x <= powerUpPosition.at(i).x + 20) {
+    for(int i = 0; i != powerUpPosition.size(); i++) {                                              
+        if(y >= powerUpPosition.at(i).y - radius * 2 && y <= powerUpPosition.at(i).y + radius && x >= powerUpPosition.at(i).x - radius * 2 && x <= powerUpPosition.at(i).x + radius && health < 5) {
             health++;
             text.setString(std::to_string(health));
             return i;
@@ -67,6 +67,10 @@ void Individual::setFitPoint() {
     if(health > 0) {
         fit = getTime();
     }
+}
+
+int Individual::getFitPoint() {
+    return fit;
 }
 
 sf::Text Individual::getText() {

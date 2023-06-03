@@ -1,5 +1,6 @@
 #include "../include/Deviantindividual.hpp"
 #include <iostream>
+#include <math.h>
 
 DeviantIndividual::DeviantIndividual()  {
     std::cout << "a Deviant has been generated." << std::endl;
@@ -14,9 +15,14 @@ void DeviantIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vecto
         std::cout << "basic" << std::endl;
     }
 
+    float magnetude = std::sqrt(std::pow(randX, 2) + std::pow(randY, 2));
+    if(magnetude != 0) {
+        randX/=magnetude;
+        randY/=magnetude;
+    }
 
-    x = x + randX;
-    y = y + randY;
+    x = x + randX * speed;
+    y = y + randY * speed;
     individualSprite.setPosition(x, y);
     text.setPosition(sf::Vector2(x + 5, y + 15));
 }

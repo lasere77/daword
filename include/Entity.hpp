@@ -7,9 +7,18 @@
 #include <array>
 #include <memory>
 
+
+/*
+*nominal value {
+*   enemy = 30;
+*   individual = 15;
+*   powerUp = 3;    
+*}
+*/
+
 const int NBINDIVIDUAL = 15;
-const int NBENEMY = 15;
-const int NBPOWERUP = 5;
+const int NBENEMY = 30;
+const int NBPOWERUP = 3;
 
 namespace entity {
     extern std::array<std::unique_ptr<Individual>, NBINDIVIDUAL> individuals;

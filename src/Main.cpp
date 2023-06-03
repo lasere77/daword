@@ -8,14 +8,21 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <unordered_map>
 
+sf::Text nbInstance;
 
 void setTimeur();
+void newInstance();
+void crossover();   //make baby
 
 unsigned int minute = 0;
 unsigned int oldSeconde = 0;
 unsigned int seconde = 0;
 
+
+unsigned int nbGeneration = 0;
+unsigned short int nbDeadIndividuals = 0;
 
 /*
 *things to review/modify {
@@ -52,6 +59,13 @@ int main() {
     generalTime.setPosition(960, 0);
     generalTime.setCharacterSize(15);
 
+    //nbInstance
+    nbInstance.setFont(font);
+    nbInstance.setPosition(0, 0);
+    nbInstance.setCharacterSize(15);
+    nbInstance.setString("generation: " + std::to_string(nbGeneration));
+
+    std::unordered_map<int, int> individualFit;
     std::vector<sf::Vector2i> enemysPosition;
     std::vector<sf::Vector2i> powerUpPosition;
     while (window.isOpen()) {
@@ -88,9 +102,20 @@ int main() {
                     entity::powerUps[usedPowerUp].generateNewPositon();
                 }
             }else {
-
-            }
+                nbDeadIndividuals++;
+                individualFit.insert({i, entity::individuals[i]->getFitPoint()});
+                if(nbDeadIndividuals == NBINDIVIDUAL) {
+                    system("PAUSE");
+                    std::cout << "STOP INSTANCE !!!!! [ " << minute << " ; " <<  seconde - 60 * minute << " ]" << std::endl;
+                    for(int j = 0; j != individualFit.size(); j++) {
+                        std::cout << j << " : " << individualFit.at(j) << std::endl;
+                    }
+                    newInstance();
+                    crossover();
+                }
+           }
         }
+        nbDeadIndividuals = 0;
         enemysPosition.clear();
         powerUpPosition.clear();
 
@@ -98,6 +123,7 @@ int main() {
         generalTime.setString("[ " + std::to_string(minute) + " ; " + std::to_string(seconde - 60 * minute) + " ]");
 
         window.clear();
+        window.draw(nbInstance);
         window.draw(generalTime);
         for(int i = 0; i != NBINDIVIDUAL; i++) {
             window.draw(entity::individuals[i]->individualSprite);
@@ -117,13 +143,34 @@ int main() {
 }
 
 
+void newInstance() {
+    nbGeneration++;
+    nbInstance.setString("generation: " + std::to_string(nbGeneration));
+    std::generate(entity::individuals.begin(), entity::individuals.end(), []() -> std::unique_ptr<Individual> {
+        switch(rand() % 3) {
+            case 0:
+                return std::make_unique<BasicIndividual>();
+            case 1:
+                return std::make_unique<FearfulIndividual>();
+            case 2: 
+                return std::make_unique<DeviantIndividual>();
+            default:
+                std::cout << "it didn't make sense this past like that..." << std::endl;
+                exit(1);
+        }
+    });
+}
+
+
+void crossover() {
+
+}
+
+
 void setTimeur() {
     seconde = getTime();
     if(seconde % 60 == 0 && oldSeconde != seconde && seconde != 0) {
         oldSeconde = seconde;
         minute+=1;
     }
-    std::cout << "old seconde: " << oldSeconde << std::endl;
-    std::cout << "seconde: " << seconde << std::endl;
-    std::cout << "minute: " << minute << std::endl;
 }

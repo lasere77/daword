@@ -1,5 +1,6 @@
 #include "../include/FearfulIndividual.hpp"
 #include <iostream>
+#include <math.h>
 
 FearfulIndividual::FearfulIndividual() {
     std::cout << "a fearfulindividual has been generated." << std::endl;
@@ -25,22 +26,29 @@ void FearfulIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vecto
                 }
             }
         }
-        //part dans la direction auposée si il l'individue est trop près du powerUp
-        for(int i = 0; i != powerUpPosition.size(); i++) {
-            if(y >= powerUpPosition.at(i).y - distanceCanSeePowerUp && y <= powerUpPosition.at(i).y + distanceCanSeePowerUp && x >= powerUpPosition.at(i).x - distanceCanSeePowerUp && x <= powerUpPosition.at(i).x + distanceCanSeePowerUp) {
-                if(x < 1920 - radius && x > 0 && y < 1080 - radius && y > 0) {
-                    if((x < powerUpPosition.at(i).x && randX > 0) || (x > powerUpPosition.at(i).x && randX < 0)) {
-                        randX = randX * -1;
-                    }
-                    if((y < powerUpPosition.at(i).y && randY > 0) || (y > powerUpPosition.at(i).y && randY < 0)) {
-                        randY = randY * -1;
-                    }
+    //part dans la direction auposée si il l'individue est trop près du powerUp
+    for(int i = 0; i != powerUpPosition.size(); i++) {
+        if(y >= powerUpPosition.at(i).y - distanceCanSeePowerUp && y <= powerUpPosition.at(i).y + distanceCanSeePowerUp && x >= powerUpPosition.at(i).x - distanceCanSeePowerUp && x <= powerUpPosition.at(i).x + distanceCanSeePowerUp) {
+            if(x < 1920 - radius && x > 0 && y < 1080 - radius && y > 0) {
+                if((x < powerUpPosition.at(i).x && randX > 0) || (x > powerUpPosition.at(i).x && randX < 0)) {
+                    randX = randX * -1;
+                }
+                if((y < powerUpPosition.at(i).y && randY > 0) || (y > powerUpPosition.at(i).y && randY < 0)) {
+                    randY = randY * -1;
                 }
             }
         }
+    }
 
-    x = x + randX;
-    y = y + randY;
+
+    float magnetude = std::sqrt(std::pow(randX, 2) + std::pow(randY, 2));
+    if(magnetude != 0) {
+        randX/=magnetude;
+        randY/=magnetude;
+    }
+
+    x = x + randX * speed;
+    y = y + randY * speed;
     individualSprite.setPosition(x, y);
     text.setPosition(sf::Vector2(x + 5, y + 15));
 }
