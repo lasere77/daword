@@ -6,6 +6,7 @@
 #include "../include/Time.hpp"
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <thread>
 #include <unordered_map>
@@ -14,7 +15,7 @@ sf::Text nbInstance;
 
 void setTimeur();
 void newInstance();
-void crossover();   //make baby
+void crossover(std::unordered_map<int, int> individualFit);   //make baby
 
 unsigned int minute = 0;
 unsigned int oldSeconde = 0;
@@ -35,12 +36,12 @@ int main() {
     window.setFramerateLimit(90);
     srand(time(nullptr));
     std::generate(entity::individuals.begin(), entity::individuals.end(), []() -> std::unique_ptr<Individual> {
-        switch(rand() % 3) {
-            case 0:
+        switch(rand() % 5) {
+            case 0: case 1:
                 return std::make_unique<BasicIndividual>();
-            case 1:
+            case 2: case 3:
                 return std::make_unique<FearfulIndividual>();
-            case 2: 
+            case 4: 
                 return std::make_unique<DeviantIndividual>();
             default:
                 std::cout << "it didn't make sense this past like that..." << std::endl;
@@ -105,17 +106,17 @@ int main() {
                 nbDeadIndividuals++;
                 individualFit.insert({i, entity::individuals[i]->getFitPoint()});
                 if(nbDeadIndividuals == NBINDIVIDUAL) {
-                    system("PAUSE");
                     std::cout << "STOP INSTANCE !!!!! [ " << minute << " ; " <<  seconde - 60 * minute << " ]" << std::endl;
                     for(int j = 0; j != individualFit.size(); j++) {
                         std::cout << j << " : " << individualFit.at(j) << std::endl;
                     }
+                    crossover(individualFit); 
                     newInstance();
-                    crossover();
                 }
            }
         }
         nbDeadIndividuals = 0;
+        individualFit.clear();
         enemysPosition.clear();
         powerUpPosition.clear();
 
@@ -146,30 +147,49 @@ int main() {
 void newInstance() {
     nbGeneration++;
     nbInstance.setString("generation: " + std::to_string(nbGeneration));
-    std::generate(entity::individuals.begin(), entity::individuals.end(), []() -> std::unique_ptr<Individual> {
-        switch(rand() % 3) {
-            case 0:
-                return std::make_unique<BasicIndividual>();
-            case 1:
-                return std::make_unique<FearfulIndividual>();
-            case 2: 
-                return std::make_unique<DeviantIndividual>();
-            default:
-                std::cout << "it didn't make sense this past like that..." << std::endl;
-                exit(1);
-        }
-    });
 }
 
 
-void crossover() {
+void crossover(std::unordered_map<int, int> individualFit) {
+    int mostFitIndividual = 0; //he fit
+    int mostFitIndividualID = 0; //he id
+    for (int i = 0; i != individualFit.size(); i++) {
+        if(individualFit.at(i) >= mostFitIndividual) {
+            mostFitIndividual = individualFit.at(i);
+            mostFitIndividualID = i;
+        }
+    }
+    //regener the best Individual for the new generation.
+    entity::individuals[mostFitIndividualID]->resetLife();
 
+    //make baby
+    for(int i = 0; i !=individualFit.size(); i++) {
+        //faire un systeme qui regarde si l'a mère est de quelle type(déviand, basic, fearl)
+        if(i != mostFitIndividualID) {
+            //std::cout << "{" << entity::individuals[i]->getType() << "}"  << " i :" << i << "moste" << mostFitIndividualID << std::endl;
+            std::cout << "{" << entity::individuals[i]->getType() << "}" << std::endl;
+            switch(entity::individuals[i]->getType()) {
+                case 0:
+                    entity::individuals[i] = std::make_unique<BasicIndividual>(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed(), entity::individuals[mostFitIndividualID]->getDistanceCanSeePowerUp(), entity::individuals[mostFitIndividualID]->getDistanceCanSeeEnemy());
+                    break;
+                case 1:
+                    entity::individuals[i] = std::make_unique<FearfulIndividual>(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed(), entity::individuals[mostFitIndividualID]->getDistanceCanSeePowerUp(), entity::individuals[mostFitIndividualID]->getDistanceCanSeeEnemy());
+                    break;
+                case 2:
+                    entity::individuals[i] = std::make_unique<DeviantIndividual>(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed());
+                    break;
+                default:
+                    std::cout << "it didn't make sense this past like that..." << std::endl;
+                    exit(1);
+            }
+        }
+    }
 }
 
 
 void setTimeur() {
     seconde = getTime();
-    if(seconde % 60 == 0 && oldSeconde != seconde && seconde != 0) {
+    if (seconde % 60 == 0 && oldSeconde != seconde && seconde != 0) {
         oldSeconde = seconde;
         minute+=1;
     }

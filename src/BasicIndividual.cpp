@@ -7,6 +7,16 @@ BasicIndividual::BasicIndividual() {
     individualSprite.setFillColor(sf::Color::Green);
 }
 
+BasicIndividual::BasicIndividual(int health, float radius, float speed, int distanceCanSeePowerUp, int distanceCanSeeEnemy) {
+    std::cout << "a Basicindividual has been generated." << std::endl;
+    this->health = health;
+    this->radius = radius;
+    this->speed = speed;
+    this->distanceCanSeePowerUp = distanceCanSeePowerUp;
+    this->distanceCanSeeEnemy = distanceCanSeeEnemy;
+    individualSprite.setFillColor(sf::Color::Green);
+}
+
 void BasicIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<sf::Vector2i> powerUpPosition) {
     if(1 == rand() % 1000) {
         randX = ((float)rand() / RAND_MAX) * 2 - 1;
@@ -57,8 +67,20 @@ void BasicIndividual::move(std::vector<sf::Vector2i> enemyPosition, std::vector<
         randY/=magnetude;
     }
 
-    x += randX;
-    y += randY;
+    x += randX * speed;
+    y += randY * speed;
     individualSprite.setPosition(x, y);
     text.setPosition(sf::Vector2(x + 5, y + 15));
+}
+
+
+int BasicIndividual::getDistanceCanSeePowerUp() {
+    return distanceCanSeePowerUp;
+}
+int BasicIndividual::getDistanceCanSeeEnemy() {
+    return distanceCanSeeEnemy;
+}
+
+int BasicIndividual::getType() {
+    return basic;
 }
