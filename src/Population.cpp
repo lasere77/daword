@@ -22,7 +22,6 @@ Individual::Individual() {
     text.setCharacterSize(15);
 }
 
-
 void Individual::borderColotion() {
     if((y > 1080 - radius && randY > 0) || (y < 0 && randY < 0)) {
         randY = randY * -1;
@@ -47,14 +46,14 @@ void Individual::damage(std::vector<sf::Vector2i> enemyPosition) {
 
 void Individual::resetLife() {
     std::cout << "the father of the new generation has regained his strength." << std::endl;
-    isAlive = true;
     health = originalHealth;
+    isAlive = true;
     text.setString(std::to_string(health));
     individualSprite.setFillColor(sf::Color::Cyan);
 }
 
 int Individual::bonusLife(std::vector<sf::Vector2i> powerUpPosition) {
-    for(int i = 0; i != powerUpPosition.size(); i++) {                                              
+    for(int i = 0; i != powerUpPosition.size(); i++) {
         if(y >= powerUpPosition.at(i).y - radius * 2 && y <= powerUpPosition.at(i).y + radius && x >= powerUpPosition.at(i).x - radius * 2 && x <= powerUpPosition.at(i).x + radius && health < 5) {
             health++;
             text.setString(std::to_string(health));

@@ -13,21 +13,16 @@
 
 sf::Text nbInstance;
 
-void setTimeur();
-void newInstance();
-void crossover(std::unordered_map<int, int> individualFit);   //make baby
-
-unsigned int minute = 0;
-unsigned int oldSeconde = 0;
-unsigned int seconde = 0;
-
+std::string setTimeur();
+void crossover(std::unordered_map<int, int> individualFit);  //make baby and mutation
 
 unsigned int nbGeneration = 0;
 unsigned short int nbDeadIndividuals = 0;
 
 /*
-*things to review/modify {
-*   speed for individuals, reponsives
+* probable bug/bug {
+*    hitbox,
+*    the basic and Fearful dont have the same functioning as the Devient for make a baby(Devient have good process);
 *}
 */
 
@@ -106,12 +101,11 @@ int main() {
                 nbDeadIndividuals++;
                 individualFit.insert({i, entity::individuals[i]->getFitPoint()});
                 if(nbDeadIndividuals == NBINDIVIDUAL) {
-                    std::cout << "STOP INSTANCE !!!!! [ " << minute << " ; " <<  seconde - 60 * minute << " ]" << std::endl;
+                    //std::cout << "STOP INSTANCE !!!!! [ " << minute << " ; " <<  seconde - 60 * minute << " ]" << std::endl;
                     for(int j = 0; j != individualFit.size(); j++) {
                         std::cout << j << " : " << individualFit.at(j) << std::endl;
                     }
-                    crossover(individualFit); 
-                    newInstance();
+                    crossover(individualFit);
                 }
            }
         }
@@ -120,8 +114,7 @@ int main() {
         enemysPosition.clear();
         powerUpPosition.clear();
 
-        setTimeur();
-        generalTime.setString("[ " + std::to_string(minute) + " ; " + std::to_string(seconde - 60 * minute) + " ]");
+        generalTime.setString("[ "  + setTimeur() + " ]");
 
         window.clear();
         window.draw(nbInstance);
@@ -136,6 +129,15 @@ int main() {
         for(int i = 0; i != NBPOWERUP; i++) {
             window.draw(entity::powerUps[i].powerUpSprite);
         }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+            for(int i = 0; i != NBINDIVIDUAL; i++) {
+                sf::Text IndividualInfo = entity::individuals[i]->showInfo();
+                IndividualInfo.setFont(font);
+                IndividualInfo.setPosition(0, 60 * i + 40); //pay attention to the number of individuals. If you change it
+                IndividualInfo.setCharacterSize(15);
+                window.draw(IndividualInfo);
+            }
+        }
         window.display();
     }
     killThread();
@@ -144,13 +146,9 @@ int main() {
 }
 
 
-void newInstance() {
+void crossover(std::unordered_map<int, int> individualFit) {
     nbGeneration++;
     nbInstance.setString("generation: " + std::to_string(nbGeneration));
-}
-
-
-void crossover(std::unordered_map<int, int> individualFit) {
     int mostFitIndividual = 0; //he fit
     int mostFitIndividualID = 0; //he id
     for (int i = 0; i != individualFit.size(); i++) {
@@ -162,21 +160,23 @@ void crossover(std::unordered_map<int, int> individualFit) {
     //regener the best Individual for the new generation.
     entity::individuals[mostFitIndividualID]->resetLife();
 
-    //make baby
+    //the mutation is done on all the individuals except on the best.
+
+    // make baby and make their mutation
     for(int i = 0; i !=individualFit.size(); i++) {
-        //faire un systeme qui regarde si l'a mère est de quelle type(déviand, basic, fearl)
         if(i != mostFitIndividualID) {
-            //std::cout << "{" << entity::individuals[i]->getType() << "}"  << " i :" << i << "moste" << mostFitIndividualID << std::endl;
-            std::cout << "{" << entity::individuals[i]->getType() << "}" << std::endl;
             switch(entity::individuals[i]->getType()) {
-                case 0:
-                    entity::individuals[i] = std::make_unique<BasicIndividual>(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed(), entity::individuals[mostFitIndividualID]->getDistanceCanSeePowerUp(), entity::individuals[mostFitIndividualID]->getDistanceCanSeeEnemy());
+                case IndividualType::basic:
+                    entity::individuals[i]->makeBaby(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed(), entity::individuals[mostFitIndividualID]->getDistanceCanSeePowerUp(), entity::individuals[mostFitIndividualID]->getDistanceCanSeeEnemy());
+                    entity::individuals[i]->mutation();
                     break;
-                case 1:
-                    entity::individuals[i] = std::make_unique<FearfulIndividual>(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed(), entity::individuals[mostFitIndividualID]->getDistanceCanSeePowerUp(), entity::individuals[mostFitIndividualID]->getDistanceCanSeeEnemy());
+                case IndividualType::fearful:
+                    entity::individuals[i]->makeBaby(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed(), entity::individuals[mostFitIndividualID]->getDistanceCanSeePowerUp(), entity::individuals[mostFitIndividualID]->getDistanceCanSeeEnemy());
+                    entity::individuals[i]->mutation();
                     break;
-                case 2:
-                    entity::individuals[i] = std::make_unique<DeviantIndividual>(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed());
+                case IndividualType::deviant:
+                    entity::individuals[i]->makeBaby(entity::individuals[mostFitIndividualID]->getOriginalHealth(), entity::individuals[mostFitIndividualID]->getRadius(), entity::individuals[mostFitIndividualID]->getSpeed(), entity::individuals[mostFitIndividualID]->getDistanceCanSeePowerUp(), entity::individuals[mostFitIndividualID]->getDistanceCanSeeEnemy());
+                    entity::individuals[i]->mutation();
                     break;
                 default:
                     std::cout << "it didn't make sense this past like that..." << std::endl;
@@ -187,10 +187,20 @@ void crossover(std::unordered_map<int, int> individualFit) {
 }
 
 
-void setTimeur() {
+std::string setTimeur() {
+    unsigned static int hour = 0;
+    unsigned static int minute = 0;
+    unsigned static int oldMinute = 0;
+    unsigned static int oldSeconde = 0;
+    unsigned int seconde = 0;
     seconde = getTime();
     if (seconde % 60 == 0 && oldSeconde != seconde && seconde != 0) {
         oldSeconde = seconde;
         minute+=1;
     }
+    if(minute % 60 == 0 && oldMinute != minute && minute != 0) {
+        oldMinute = minute;
+        hour+=1;
+    }
+    return std::to_string(hour) + "h ; " +  std::to_string(minute - 60 * hour) + "min ; " + std::to_string(seconde - 60 * minute) + "s";
 }

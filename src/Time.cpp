@@ -1,4 +1,4 @@
-#include "../include/time.hpp"
+#include "../include/Time.hpp"
 #include <thread>
 #include <iostream>
 
