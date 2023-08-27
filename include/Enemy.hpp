@@ -8,6 +8,7 @@ class Enemy {
     public:
         Enemy();
         void move();
+        void borderColotion();
         sf::CircleShape enemySprite;
         sf::Vector2i getPosition();
 

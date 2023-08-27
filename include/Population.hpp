@@ -8,18 +8,18 @@ enum IndividualType{
     deviant
 };
 
+//change all of this const to #define
+#define MAXHEALTH 5 + 1
+#define MAXDISTANCECANSEEPOWERUP 90 + 1
+#define MAXDISTANCECANSENEMY 90 + 20 + 1
+#define MAXSPEED 1.05f
+#define MAXRADIUS 15.0f
 
-const int MAXHEALTH = 5 + 1;
-const int MAXDISTANCECANSEEPOWERUP = 90 + 1;
-const int MAXDISTANCECANSENEMY = 90 + 20 + 1;
-const float MAXSPEED = 1.05f;
-const float MAXRADIUS = 15.0f;
-
-const int MINHEALTH = 1;
-const int MINDISTANCECANSEEPOWERUP = 30;
-const int MINDISTANCECANSENEMY = 30 - 20;
-const float MINSPEED = 0.35;
-const float MINRADIUS = 5;
+#define MINHEALTH 1
+#define MINDISTANCECANSEEPOWERUP 30
+#define MINDISTANCECANSENEMY 30 - 20
+#define MINSPEED 0.35
+#define MINRADIUS 5
 
 
 class Individual {

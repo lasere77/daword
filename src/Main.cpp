@@ -21,7 +21,7 @@ unsigned short int nbDeadIndividuals = 0;
 
 /*
 * probable bug/bug {
-*    hitbox,
+*    le nombre d'enemis diminus -_- je pense qu'il passe a travers les murs -_-, normanelement fix! j'ais repris celuis des Individuals
 *    the basic and Fearful dont have the same functioning as the Devient for make a baby(Devient have good process);
 *}
 */
@@ -81,6 +81,7 @@ int main() {
         }
         //enemys
         for(int i = 0; i != NBENEMY; i++) {
+            entity::enemys[i].borderColotion();
             entity::enemys[i].move();
             entity::enemys[i].enemySprite.getPosition();
             enemysPosition.push_back(entity::enemys[i].getPosition());
@@ -107,7 +108,7 @@ int main() {
                     }
                     crossover(individualFit);
                 }
-           }
+            }
         }
         nbDeadIndividuals = 0;
         individualFit.clear();

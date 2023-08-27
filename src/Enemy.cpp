@@ -13,12 +13,22 @@ Enemy::Enemy() {
     enemySprite.setRadius(10.0f);
 }
 
+void Enemy::borderColotion() {
+    if((y > 1080 - enemySprite.getRadius() && randY > 0) || (y < 0 && randY < 0)) {
+        randY = randY * -1;
+    }else if((x > 1920 - enemySprite.getRadius() && randX > 0) || (x < 0 && randX < 0)) {
+        randX = randX * -1;
+    }
+}
+
 void Enemy::move() {
+    /*
     if(enemySprite.getPosition().y > 1080 - enemySprite.getRadius() || enemySprite.getPosition().y < 0) {
         randY = randY * -1;
     }else if(enemySprite.getPosition().x > 1920 - 10.0f || enemySprite.getPosition().x < 0) {
         randX = randX * -1;
     }
+    */
 
     if(1 == rand() % 1000) {
         randX = ((float)rand() / RAND_MAX) * 2 - 1;
@@ -34,7 +44,7 @@ void Enemy::move() {
 
     x = x + randX * speed;
     y = y + randY * speed;
-   enemySprite.setPosition(x, y);
+    enemySprite.setPosition(x, y);
 }
 
 sf::Vector2i Enemy::getPosition() {
