@@ -22,14 +22,6 @@ void Enemy::borderColotion() {
 }
 
 void Enemy::move() {
-    /*
-    if(enemySprite.getPosition().y > 1080 - enemySprite.getRadius() || enemySprite.getPosition().y < 0) {
-        randY = randY * -1;
-    }else if(enemySprite.getPosition().x > 1920 - 10.0f || enemySprite.getPosition().x < 0) {
-        randX = randX * -1;
-    }
-    */
-
     if(1 == rand() % 1000) {
         randX = ((float)rand() / RAND_MAX) * 2 - 1;
         randY = ((float)rand() / RAND_MAX) * 2 - 1;

@@ -7,15 +7,6 @@
 #include <array>
 #include <memory>
 
-
-/*
-*nominal value {
-*   enemy = 30;
-*   individual = 15;
-*   powerUp = 3;    
-*}
-*/
-
 /*
 *nominal value {
 *   enemy = 50;

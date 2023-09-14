@@ -14,14 +14,14 @@
 sf::Text nbInstance;
 
 std::string setTimeur();
-void crossover(std::unordered_map<int, int> individualFit);  //make baby and mutation
+sf::Text setAverageIndividualsInfo(sf::Font font);
+void crossover(std::unordered_map<int, int> individualFit);  //make baby and mutationù
 
 unsigned int nbGeneration = 0;
 unsigned short int nbDeadIndividuals = 0;
 
 /*
-* probable bug/bug {
-*    le nombre d'enemis diminus -_- je pense qu'il passe a travers les murs -_-, normanelement fix! j'ais repris celuis des Individuals
+* probable bug {
 *    the basic and Fearful dont have the same functioning as the Devient for make a baby(Devient have good process);
 *}
 */
@@ -36,7 +36,7 @@ int main() {
                 return std::make_unique<BasicIndividual>();
             case 2: case 3:
                 return std::make_unique<FearfulIndividual>();
-            case 4: 
+            case 4:
                 return std::make_unique<DeviantIndividual>();
             default:
                 std::cout << "it didn't make sense this past like that..." << std::endl;
@@ -138,6 +138,7 @@ int main() {
                 IndividualInfo.setCharacterSize(15);
                 window.draw(IndividualInfo);
             }
+            window.draw(setAverageIndividualsInfo(font));
         }
         window.display();
     }
@@ -204,4 +205,38 @@ std::string setTimeur() {
         hour+=1;
     }
     return std::to_string(hour) + "h ; " +  std::to_string(minute - 60 * hour) + "min ; " + std::to_string(seconde - 60 * minute) + "s";
+}
+
+
+sf::Text setAverageIndividualsInfo(sf::Font font) {
+    sf::Text averageIndividualsInfo;
+    float averageRadius = 0;
+    float averageSpeed = 0;
+    float averageOriginalHealth = 0;
+    float averageDistanceCanSeeEnemy = 0;
+    float averageDistanceCanSeePowerUp = 0;
+    float nbNoDeviant = 0;
+    //set average
+    for(int i = 0; i != NBINDIVIDUAL; i++) {
+        averageOriginalHealth += entity::individuals[i]->getOriginalHealth();
+        averageSpeed += entity::individuals[i]->getSpeed();
+        averageRadius += entity::individuals[i]->getRadius();
+        if(entity::individuals[i]->getType() != IndividualType::deviant) {
+            averageDistanceCanSeeEnemy+=entity::individuals[i]->getDistanceCanSeeEnemy();
+            averageDistanceCanSeePowerUp+=entity::individuals[i]->getDistanceCanSeePowerUp();
+            nbNoDeviant++;
+        }
+    }
+    averageOriginalHealth/=NBINDIVIDUAL;
+    averageSpeed/=NBINDIVIDUAL;
+    averageRadius/=NBINDIVIDUAL;
+    averageDistanceCanSeeEnemy/=nbNoDeviant;
+    averageDistanceCanSeePowerUp/=nbNoDeviant;
+
+    //setText
+    averageIndividualsInfo.setFont(font);
+    averageIndividualsInfo.setPosition(0, 60 * (NBINDIVIDUAL + 1) + 40);
+    averageIndividualsInfo.setCharacterSize(15);
+    averageIndividualsInfo.setString( "average { health: " + std::to_string(averageOriginalHealth) + " speed: " + std::to_string(averageSpeed) + " radius: " + std::to_string(averageRadius) + " canSeeEnemy: " + std::to_string(averageDistanceCanSeeEnemy) + " canSeePowerUp: " + std::to_string(averageDistanceCanSeePowerUp) + " }");
+    return averageIndividualsInfo;
 }
